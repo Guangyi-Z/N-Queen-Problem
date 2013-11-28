@@ -1,9 +1,15 @@
+/**
+*	Call/Return Style for N Queen Problem
+*	Methods Relationship:
+*	main()->Nqueen()->testBoard()
+					->printBoard()
+					->Nqueen()
+**/
 #include<stdio.h>
 #include<stdbool.h>
 #include<stdlib.h>
 
 #define n 14	// number of queens
-
 int NumOfSolutions= 0;
 int Cqueen[n];
 
