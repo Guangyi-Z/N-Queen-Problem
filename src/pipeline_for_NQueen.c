@@ -1,85 +1,83 @@
 /**
-*	Black Board (Shared Data) Style for N-Queen Problem
-*	3 Program units working on the black board: G, T, P (generater, tester, printer)
+*	Pipeline Style for N-Queen Problem
+*	3 Program units: G->T->P (generater->tester->printer)
 **/
 
 #include<stdio.h>
 #include<stdbool.h>
 #include<stdlib.h>
 
-#define N 14	// Number of Queens
+#define N 8	//	Nummber of Queens
 
-struct blackboard{
-	int Cqueen[N];	// columns number of the queen on subindex row
-	bool flag,	// for current or wrong for the current positions of the queens
-		 endFlag;	// flag for the ending of the program
-	int num;	// number of current queens on the board
+struct data{
+	int Cqueen[N];
+	bool flag;
+	int num;
 };
-typedef struct blackboard data;
+typedef struct data data;
 
-void generater(data *d);
-void tester(data* d);
-void printer(data *d);
+data* generater(data *d);
+data* tester(data* d);
+data* printer(data *d);
 
 int main(){
-	data *d= malloc(sizeof(data));
-	d->num= 0;
-	d->endFlag= false;
-	while(! d->endFlag){
-		generater(d);
-		tester(d);
-//		printer(d);
+	data *d= NULL;
+	while(1){
+		d= generater(d);
+		d= tester(d);
+		d= printer(d);
 	}
-//	printf("All solutions tested.\nProgram ends.\n");
-	free(d);
-	exit(1);
 }
 
-void generater(data *d){
-	if( d->num == 0 ){
+data* generater(data *d){
+	if( NULL == d ){
+		d= malloc(sizeof(data));
 		d->num= 1;
 		d->Cqueen[0]= 0;
-		return ;
+		return d;
 	}
 	if( d->flag ){	// current Queens are correct
 		if( d->num == N ){	// N Queens already
 			for( int i= N-1; i>= 0; i-- ){
 				if( d->Cqueen[i] != N-1 ){
 					d->Cqueen[i]++;
-					return;
+					return d;
 				}
 				d->num--;
 			}
-			d->num= 0;
-			d->endFlag= true;
-		} else {	// put one more Queen
-			d->Cqueen[d->num]= 0;
-			d->num++;
+			printf("All solutions tested.\nProgram ends.\n");
+			free(d);
+			exit(1);
 		}
-		return;
+		// put one more Queen
+		d->Cqueen[d->num]= 0;
+		d->num++;
+		return d;
 	} else {	// current Queens are wrong
 		// reposition the current Queen
 		for( int i= d->num-1; i>=0; i-- ){
 			if( N-1 != d->Cqueen[i] ){
 				d->Cqueen[i]++;
-				return;
+				return d;
 			}
 			d->num--;
 		}
-		d->num= 0;
-		d->endFlag= true;
+		printf("All solutions tested.\nProgram ends.\n");
+		free(d);
+		exit(1);
 	}
-	return;
+	// never go to here
+	return d;
 }
 
-void tester(data* d){
+data* tester(data* d){
 	int num= d->num;
 	// test whether two Queens in one column
 	for( int i= 0; i< num; i++ ){
 		for (int j= i+1; j< num; j++){
 			if( d->Cqueen[i] == d->Cqueen[j] ){
 				d->flag= false;
-				return;
+				return d;
 			}
 		}
 	}
@@ -89,16 +87,16 @@ void tester(data* d){
 			if( i+d->Cqueen[i] == j+d->Cqueen[j] 
 				|| i-d->Cqueen[i] == j-d->Cqueen[j] ){
 				d->flag= false;
-				return;
+				return d;
 			}
 		}
 	}
 	// all correct!
 	d->flag= true;
-	return;
+	return d;
 }
 
-void printer(data *d){
+data* printer(data *d){
 	static int numOfSolutions= 0;
 	if( d->flag && d->num == N ){
 		// print the board of Queens
@@ -113,7 +111,7 @@ void printer(data *d){
 		}
 		printf("\n");
 	}
-	return;
+	return d;
 }
 
 

@@ -9,7 +9,7 @@
 #include<stdbool.h>
 #include<stdlib.h>
 
-#define n 14	// number of queens
+#define n 8	// number of queens
 int NumOfSolutions= 0;
 int Cqueen[n];
 
@@ -19,14 +19,14 @@ bool testBoard(int num);
 
 int main(){
 	Nqueen(0);
-//	printf("Number of Solutions for %d Queens is: %d\n", n, NumOfSolutions);
+	printf("Number of Solutions for %d Queens is: %d\n", n, NumOfSolutions);
 
 	exit(1);
 }
 
 void Nqueen(int num){
 	if( num == n ){
-//		printBoard();
+		printBoard();
 		NumOfSolutions++;
 		return;
 	}
